@@ -1,0 +1,52 @@
+﻿@page
+@model Product_Management_App.Pages.ContactPageModel
+
+@{
+    ViewData["Title"] = "Contact Us";
+}
+
+<div class="container mt-5">
+    <!-- Page Heading with Icon -->
+    <h2 class="mb-4 text-center">
+        <svg style="margin-right: 15px;" xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="#2854C5">
+            <path d="...Z" /> <!-- Contact Icon Path -->
+        </svg>
+        Contact Us
+    </h2>
+
+    <!-- Success Message -->
+    @if (Model.IsSubmitted)
+    {
+        <div class="alert alert-success" role="alert">
+            Thank you for your message! We will get back to you shortly.
+        </div>
+    }
+
+    <!-- Contact Form -->
+    <form method="post" class="mx-auto" style="max-width: 600px;">
+        <div class="mb-3">
+            <label asp-for="FormData.Name" class="form-label">Your Name</label>
+            <input asp-for="FormData.Name" class="form-control" />
+            <span asp-validation-for="FormData.Name" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="FormData.Email" class="form-label">Email Address</label>
+            <input asp-for="FormData.Email" type="email" class="form-control" />
+            <span asp-validation-for="FormData.Email" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="FormData.Message" class="form-label">Your Message</label>
+            <textarea asp-for="FormData.Message" class="form-control" rows="4"></textarea>
+            <span asp-validation-for="FormData.Message" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Send Message</button>
+    </form>
+</div>
+
+@section Scripts {
+    <!-- Validation Scripts for Unobtrusive JS -->
+    <partial name="_ValidationScriptsPartial" />
+}

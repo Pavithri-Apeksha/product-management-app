@@ -1,0 +1,16 @@
+﻿@model Product_Management_App.Models.Product
+
+<!-- Product Card -->
+<div class="card h-100">
+    <!-- Product Image -->
+    <img src="@Model.thumbnail" class="card-img-top" alt="@Model.title" />
+
+    <!-- Product Details -->
+    <div class="card-body">
+        <h5 class="card-title">@Model.title</h5>
+        <p class="card-text">$@Model.price</p>
+
+        <!-- View Details Button (used to trigger modal) -->
+        <button class="btn btn-primary view-details" data-id="@Model.id">View Details</button>
+    </div>
+</div>

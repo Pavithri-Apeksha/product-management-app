@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ItemizePro</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Product_Management_App.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/navbar.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/homepage.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+          integrity="sha512-vXw1v+POArfdwMd+iHkMGj3hZT9Isq1Uv53aA2KxQ1kltEQcdXlRAZ2xdhtrpXkS7wKJ+w9BJyP1bnvM+RaaRg=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <header>
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
+            <div class="container">
+                <a class="navbar-brand nav-page" href="#" data-page="Index">ItemizePro</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link nav-page" href="#" data-page="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-page" href="#" data-page="ProductPage">Products</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link nav-page" href="#" data-page="ContactPage">Contact Us</a>
+                        </li>
+                        <li class="nav-item position-relative">
+                            <a class="nav-link nav-page" href="#" data-page="Cart">
+                                <span class="material-symbols-outlined">shopping_cart</span>
+                                <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-light text-dark d-none">0</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Page Content -->
+    <div class="container">
+        <main role="main" id="main-content" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- Shared Footer -->
+    @await Html.PartialAsync("_Footer")
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <!-- SPA-Like Navigation -->
+    <script>
+        // Updates the cart badge with current item count
+        function updateCartBadge() {
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            const count = cart.length;
+            const badge = $("#cart-count");
+
+            if (count > 0) {
+                badge.removeClass("d-none").text(count);
+            } else {
+                badge.addClass("d-none").text("0");
+            }
+        }
+
+        $(document).ready(function () {
+            updateCartBadge(); // Initial badge update
+
+            // Intercept nav link clicks for AJAX page loading
+            $(".nav-page").on("click", function (e) {
+                e.preventDefault();
+                const page = $(this).data("page");
+                if (!page) return;
+
+                $.get(`/${page}`, function (data) {
+                    const $response = $("<div>").html(data);
+                    const newContent = $response.find("#main-content").html();
+                    $("#main-content").html(newContent);
+
+                    // Run inline script for product data if present
+                    const inlineScript = $response.find("script").filter(function () {
+                        return this.text.includes("window.productsData");
+                    }).text();
+                    if (inlineScript) {
+                        eval(inlineScript);
+                    }
+
+                    // Load page-specific external scripts
+                    if (page === "ProductPage") {
+                        $.getScript("/js/productPage.js", updateCartBadge);
+                        $.getScript("/js/productModal.js");
+                    } else if (page === "Cart") {
+                        $.getScript("/js/cart.js", function () {
+                            if (typeof initCartPage === "function") {
+                                initCartPage(); // Render cart items
+                            }
+                            updateCartBadge();
+                        });
+                    } else {
+                        updateCartBadge();
+                    }
+
+                    // Update browser URL
+                    window.history.pushState({}, '', `/${page}`);
+                }).fail(function () {
+                    alert("❌ Failed to load page.");
+                });
+            });
+
+            // Handle browser back/forward navigation
+            window.onpopstate = function () {
+                location.reload();
+            };
+        });
+    </script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

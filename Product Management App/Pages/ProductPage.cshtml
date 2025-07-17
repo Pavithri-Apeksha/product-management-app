@@ -1,0 +1,75 @@
+﻿@page
+@model ProductPageModel
+@using System.Linq
+
+<style>
+    /* Highlight search term */
+    mark {
+        background-color: yellow;
+        color: black;
+        border-radius: 2px;
+    }
+</style>
+
+<div id="main-content">
+    <div class="container mt-4">
+        <h2 class="mb-3">Product Management</h2>
+
+        <!-- Search input and category filter dropdown -->
+        <div class="row mb-3">
+            <div class="col-6">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search products..." />
+            </div>
+            <div class="col-6">
+                <select id="categoryFilter" class="form-select">
+                    <option value="">All Categories</option>
+                    @* Dynamically populate categories from the product list *@
+                    @foreach (var category in Model.Products.Select(p => p.category).Distinct())
+                    {
+                        <option value="@category">@category</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <!-- Grid container where products will be rendered -->
+        <div class="row g-3" id="productGrid"></div>
+
+        <!-- Pagination controls -->
+        <nav>
+            <ul id="pagination" class="pagination justify-content-center mt-4"></ul>
+        </nav>
+    </div>
+
+    <!-- Modal for Product Details and Add to Cart -->
+    <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="modalTitle" class="modal-title"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img id="modalImage" class="img-fluid mb-3" alt="Product image" />
+                    <p id="modalDescription"></p>
+                    <p><strong>Rating:</strong> <span id="modalRating"></span> ⭐</p>
+                    <p><strong>Price:</strong> $<span id="modalPrice"></span></p>
+                    <button id="addToCartBtn" class="btn btn-success" data-id="">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Expose products data to JavaScript -->
+    <script>
+        window.productsData = @Html.Raw(Json.Serialize(Model.Products));
+    </script>
+
+    <!-- Product page main script -->
+    <script src="~/js/productPage.js"></script>
+
+    <!-- Product modal interaction script -->
+    <script src="~/js/productModal.js"></script>
+}

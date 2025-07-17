@@ -1,0 +1,61 @@
+﻿/* Hero section background with gradient overlay and image */
+.hero-section {
+    background: linear-gradient(to right, #2854c5, #203a93);
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("https://img.freepik.com/free-photo/cute-girls-with-shopping-bag-city_1157-28112.jpg?semt=ais_hybrid&w=740");
+    height: 80vh;
+    padding: 60px 20px;
+    color: white;
+}
+
+/* Fade-in animation for the main title, sliding down */
+.animated-title {
+    animation: fadeInDown 0.8s ease-in-out;
+}
+
+/* Fade-in animation for subtitle, sliding up */
+.animated-subtitle {
+    animation: fadeInUp 1s ease-in-out;
+}
+
+/* Styling for custom browse button */
+.custom-browse-btn {
+    padding: 10px 20px;
+    background-color: #fff;
+    color: #2854c5;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+    /* Hover effect for the browse button */
+    .custom-browse-btn:hover {
+        background-color: #e6e6e6;
+        color: #1a3a85;
+    }
+
+/* Keyframes for fading in title from above */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Keyframes for fading in subtitle from below */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

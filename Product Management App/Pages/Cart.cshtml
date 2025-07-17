@@ -1,0 +1,26 @@
+﻿@page
+@model CartModel
+
+@{
+    ViewData["Title"] = "Your Cart";
+}
+
+<!-- Cart Page Layout -->
+<div class="container mt-4">
+    <h2>Your Shopping Cart</h2>
+
+    <!-- Cart content dynamically injected via JavaScript -->
+    <div id="cartContainer" class="mt-4">
+        <p>Loading your cart...</p>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Load cart logic -->
+    <script src="~/js/cart.js"></script>
+
+    <script>
+        // Trigger cart rendering when page loads (especially when loaded via AJAX)
+        initCartPage();
+    </script>
+}
