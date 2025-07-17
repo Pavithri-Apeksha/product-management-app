@@ -1,4 +1,4 @@
-# ItemizePro — Product Management and Shopping Platform
+# ItemizePro â€” Product Management and Shopping Platform
 
 ## Overview
 
